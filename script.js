@@ -1,5 +1,5 @@
 "use strict";
-let magicalNumber = 15;
+let magicalNumber = Math.round(Math.random() * 100);
 let attempt = 10;
 
 const isNumber = function (num) {
@@ -8,19 +8,29 @@ const isNumber = function (num) {
 
 const game = function (magicalNumber, attempt) {
   const ask = function () {
-    let number = prompt("Введите число");
-    if (isNumber(number) && number != null) {
+    let number = prompt("Введите число", "25");
+    if (number == null) {
+      return null;
+    } else if (isNumber(number)) {
       return number;
     } else {
-      ask();
+      return ask();
     }
   };
 
+  const gameOver = function () {
+    alert("Игра окончена");
+  };
+
+  const getRandomNumber = function () {
+    return Math.round(Math.random() * 100);
+  };
+
   const isWin = function (number) {
-    if (attempt == 0) {
+    if (attempt == 1) {
       let answer = confirm("Попытки закончились!!!, Хотели бы вы еще сыграть?");
       if (answer == true) {
-        game(magicalNumber, 10);
+        game(getRandomNumber(), 10);
       }
     } else {
       if (number == magicalNumber) {
@@ -28,21 +38,36 @@ const game = function (magicalNumber, attempt) {
           "Поздравляю, Вы угадали!!!, Хотели бы вы еще сыграть?"
         );
         if (answer == true) {
-          game(magicalNumber, 10);
+          game(getRandomNumber(), 10);
         }
       } else if (number > magicalNumber) {
         attempt--;
         alert("Загаданное число меньше, У вас осталось попыток " + attempt);
-        isWin(ask());
+        let number = ask();
+        if (number == null) {
+          gameOver();
+        } else {
+          isWin(number);
+        }
       } else if (number < magicalNumber) {
         attempt--;
         alert("Загаданное число больше, У вас осталось попыток " + attempt);
-        isWin(ask());
+        let number = ask();
+        if (number == null) {
+          gameOver();
+        } else {
+          isWin(number);
+        }
       }
     }
   };
 
-  isWin(ask());
+  let number = ask();
+  if (number == null) {
+    gameOver();
+  } else {
+    isWin(number);
+  }
 };
 
 game(magicalNumber, attempt);
